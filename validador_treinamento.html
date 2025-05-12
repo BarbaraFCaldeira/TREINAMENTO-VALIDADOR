@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Validação de Treinamento</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      padding: 20px;
+    }
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    #mensagem {
+      margin-top: 15px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <button id="validarTreinamento" onclick="validarAcesso()">✅ Valide seu treinamento</button>
+  <p id="mensagem"></p>
+
+  <script>
+    function validarAcesso() {
+      var botao = document.getElementById("validarTreinamento");
+      var mensagem = document.getElementById("mensagem");
+
+      botao.disabled = true;
+      botao.innerText = "Validando...";
+
+      fetch("https://prod-31.brazilsouth.logic.azure.com:443/workflows/07d778942efd492cb6aa319db243a591/triggers/manual/paths/invoke?api-version=2016-06-01")
+        .then(response => {
+          if (response.ok) {
+            mensagem.innerText = "✅ Treinamento validado com sucesso!";
+            botao.innerText = "✓ Validado";
+          } else {
+            mensagem.innerText = "❌ Erro ao validar. Tente novamente.";
+            botao.disabled = false;
+            botao.innerText = "Valide seu treinamento";
+          }
+        })
+        .catch(error => {
+          mensagem.innerText = "❌ Erro de rede.";
+          botao.disabled = false;
+          botao.innerText = "Valide seu treinamento";
+        });
+    }
+  </script>
+</body>
+</html>
